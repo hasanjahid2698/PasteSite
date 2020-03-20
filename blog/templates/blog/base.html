@@ -22,7 +22,7 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
           <div class="container">
-            <a class="navbar-brand mr-4" href="/">Django Blog</a>
+            <a class="navbar-brand mr-4" href="/">PasteSite</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -49,6 +49,14 @@
       <!-- main body -->
       <main role="main" class="container">
         <div class="row">
+          <div class="col-md-3 container">
+            <ul class="list-group">
+              <li class="btn btn-info list-group-item list-group-item-light">Paste Texts</li>
+              <li class="btn btn-info list-group-item list-group-item-light">Paste Files</li>
+              <li class="btn btn-info list-group-item list-group-item-light">My Pastes</li>
+              <li class="btn btn-info list-group-item list-group-item-light">My Friends</li>
+            </ul>
+          </div>
           <div class="col-md-9">
             {% if messages %}
               {% for message in messages%}
@@ -58,20 +66,6 @@
               {% endfor %}
             {% endif %}
             {% block content %}{% endblock %}
-          </div>
-          <div class="col-md-3 container">
-            <div class="btn content-section">
-                <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
-                  <a class="sidebar-heading" href="{% url 'profile' %}">{{ user.username }}</a>
-            </div>
-                <ul class="list-group">
-                  <li class="btn btn-info list-group-item list-group-item-light">Latest Posts</li>
-                  <li class="btn btn-info list-group-item list-group-item-light">Announcements</li>
-                  <li class="btn btn-info list-group-item list-group-item-light">Calendars</li>
-                  <li class="btn btn-info list-group-item list-group-item-light">etc</li>
-                </ul>
-              </p>
-            <!-- </div> -->
           </div>
         </div>
       </main>

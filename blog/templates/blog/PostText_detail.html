@@ -1,31 +1,26 @@
 {% extends "blog/base.html" %}
-
 {% block content %}
-
-    {% for post in posts%}
         <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="#">{{ post.author }}</a>
+                    <a class="mr-2" href="#">{{ object.author }}</a>
                     <div>
-                        <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                        <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
                     </div>
                     <div>
-                        {% if post.expiration == 1 %}
+                        {% if object.expiration == 1 %}
                             <small class="text-muted">Paste's duration is one day </small>
-                        {% elif post.expiration == 7 %}
+                        {% elif object.expiration == 7 %}
                             <small class="text-muted ">Paste's duration is one week </small>
-                        {% elif post.expiration == 30 %}
+                        {% elif object.expiration == 30 %}
                             <small class="text-muted">Paste's duration is one month </small>
                         {% else %}
                             <small class="text-muted">Paste's duration is one year </small>
                         {% endif %}
                     </div>
                 </div>
-                <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-                <p class="article-content">{{ post.content }}</p>
+                <h2 class="article-title">{{ object.title }}</h2>
+                <p class="article-content">{{ object.content }}</p>
             </div>
         </article>
-    {% endfor %}
-
 {% endblock content %}
