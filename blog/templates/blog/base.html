@@ -50,12 +50,13 @@
       <main role="main" class="container">
         <div class="row">
           <div class="col-md-3 container">
-            <ul class="list-group">
-              <li class="btn btn-info list-group-item list-group-item-light">Paste Texts</li>
-              <li class="btn btn-info list-group-item list-group-item-light">Paste Files</li>
-              <li class="btn btn-info list-group-item list-group-item-light">My Pastes</li>
-              <li class="btn btn-info list-group-item list-group-item-light">My Friends</li>
-            </ul>
+            {% if user.is_authenticated %}
+              <div class="list-group ">
+                <a class="btn btn-info list-group-item list-group-item-light" href="{% url 'post-create' %}" >Paste Post</a>
+                <a class="btn btn-info list-group-item list-group-item-light" href="{% url 'blog-myHome' %}">My Pastes</a>
+                <a class="btn btn-info list-group-item list-group-item-light" href="#">My Friends</a>
+              </div>
+            {% endif%}
           </div>
           <div class="col-md-9">
             {% if messages %}

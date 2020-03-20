@@ -24,6 +24,13 @@ class PostListView(ListView):
     ordering = ['-date_posted']
 
 
+class MyPostListView(ListView):
+    model = PostText
+    template_name = 'blog/my_home.html'    #<app>/<model>_<viewtype>.html
+    context_object_name = 'posts'
+    ordering = ['-date_posted']
+
+
 class PostDetailView(DetailView):
     model = PostText
 
@@ -53,7 +60,7 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin ,UpdateView):
 
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin ,DeleteView):
     model = PostText
-
+    success_url = '/'
     def test_func(self):
         post = self.get_object()
         if self.request.user == post.author:
