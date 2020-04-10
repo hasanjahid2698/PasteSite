@@ -38,6 +38,7 @@ class PostFile(models.Model):
     file = models.FileField(upload_to = 'files/', blank = True , null = True)
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # shared_with = models.ManyToManyField(User, related_name="Shared_with", blank = True , null = True)
 
     def __str__(self):
         return self.title
@@ -70,3 +71,8 @@ class Attachment(models.Model):
     def delete(self, *args, **kwargs):
         self.file.delete()
         super().delete(*args, **kwargs)
+
+
+class share(models.Model):
+    post = models.ForeignKey(PostFile, on_delete = models.CASCADE)
+    viewer = models.ForeignKey(User, on_delete=models.CASCADE)

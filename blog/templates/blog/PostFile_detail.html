@@ -8,11 +8,11 @@
                         <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
                     </div>
                     <div>
-                        {% if object.expiration == 1 %}
+                        {% if object.expiration == '1' %}
                             <small class="text-muted">Paste's duration is one day </small>
-                        {% elif object.expiration == 7 %}
+                        {% elif object.expiration == '7' %}
                             <small class="text-muted ">Paste's duration is one week </small>
-                        {% elif object.expiration == 30 %}
+                        {% elif object.expiration == '30' %}
                             <small class="text-muted">Paste's duration is one month </small>
                         {% else %}
                             <small class="text-muted">Paste's duration is one year </small>
@@ -22,6 +22,7 @@
                         {% if object.author == user %}
                             <a class= "btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}"> Update </a>
                             <a class= "btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}"> Delete </a>
+                            <a class= "btn btn-info btn-sm mt-1 mb-1" href="{% url 'post-share' object.id %}"> Share </a>
                         {% endif %}
                     </div>
                 </div>

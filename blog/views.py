@@ -152,6 +152,14 @@ class PostFileDeleteView(LoginRequiredMixin,UserPassesTestMixin ,DeleteView):
 
 
 
+def PostFileShare(request, id=None):
+    instance = get_object_or_404(PostFile, id = id)
+    form =  PostFileForm(request.POST or None)
+    form.instance.author = request.user
+
+    return render(request, "blog/PostFile_Share.html", context)
+        
+
 #done
 class MyPostListView(ListView):
     model = PostText
