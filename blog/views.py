@@ -11,7 +11,8 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy
 from .models import PostText, PostFile, Attachment
-from .forms import PostFileForm
+from .forms import PostFileForm,PostFileShareForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
@@ -34,7 +35,7 @@ def home(request):
 #         'form': form
 #     })
 
-class PostFileCreateView(CreateView):
+class PostFileCreateView(LoginRequiredMixin,CreateView):
     model = PostFile
     form_class = PostFileForm
     success_url = reverse_lazy('postfile-create')
@@ -154,10 +155,18 @@ class PostFileDeleteView(LoginRequiredMixin,UserPassesTestMixin ,DeleteView):
 
 def PostFileShare(request, id=None):
     instance = get_object_or_404(PostFile, id = id)
-    form =  PostFileForm(request.POST or None)
-    form.instance.author = request.user
-
-    return render(request, "blog/PostFile_Share.html", context)
+    if request.method == 'POST':
+        form = PostFileShareForm(request.POST)
+        if(form.is_valid()):
+            u_name = form.instance.viewer_username
+            try:
+                user = User.objects.get(username=u_name)
+            except User.DoesNotExist:
+                user = None
+            print(user)
+    else:
+        form = PostFileShareForm()
+    return render(request, "blog/PostFile_Share.html",{'form':form})
         
 
 #done

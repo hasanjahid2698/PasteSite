@@ -76,3 +76,7 @@ class Attachment(models.Model):
 class share(models.Model):
     post = models.ForeignKey(PostFile, on_delete = models.CASCADE)
     viewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    viewer_username = models.CharField('Sent To',max_length=100)
+
+    def __str__(self):
+        return self.viewer_username

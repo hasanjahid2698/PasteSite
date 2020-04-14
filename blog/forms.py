@@ -1,6 +1,7 @@
 from django import forms
-
-from .models import PostFile
+from django.contrib.auth.models import User
+from .models import PostFile,share
+from django.contrib.auth.models import User
 
 class PostFileForm(forms.ModelForm):
     # def __init__(self, qs=None, *args, **kwargs):
@@ -14,3 +15,20 @@ class PostFileForm(forms.ModelForm):
         widgets = {
             'file': forms.FileInput(attrs={ 'class': 'form-control', 'multiple': True})
         }
+
+
+class PostFileShareForm(forms.ModelForm):
+    class Meta:
+        model = share
+        fields = ['viewer_username']
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        u_name = cleaned_data.get('viewer_username')
+        try:
+            user = User.objects.get(username=u_name)
+        except User.DoesNotExist:
+            user = None
+
+        if user == None :
+            raise  forms.ValidationError('Please enter a correct username. Note that field may be case-sensitive.')

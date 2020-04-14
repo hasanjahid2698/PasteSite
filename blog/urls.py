@@ -31,7 +31,7 @@ urlpatterns = [
     # path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('post/<int:pk>/delete/', PostFileDeleteView.as_view(), name='post-delete'),
 
-    path('post/<int:pk>/share/', PostFileShare, name='post-share'),
+    path('post/<int:id>/share/', PostFileShare, name='post-share'),
 
     # path('post/text/new/', PostCreateView.as_view(), name='posttext-create'),
     path('post/file/new/', PostFileCreateView.as_view() , name='postfile-create'),
