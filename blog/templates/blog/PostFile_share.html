@@ -6,8 +6,13 @@
         <form method="POST" enctype="multipart/form-data"  >
             {% csrf_token %}
             <fieldset class="form-group"> 
-                <legend class="border-bottom mb-4 ">Share Post</legend>
-                {{ form | crispy }}
+                <legend class="border-bottom mb-4 ">Share Post With</legend>
+                {{ formset | crispy }}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Share</button>

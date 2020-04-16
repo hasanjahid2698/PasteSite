@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.core.files.storage import FileSystemStorage
 from django.views.generic import (
@@ -10,9 +11,11 @@ from django.views.generic import (
     DeleteView
 )
 from django.urls import reverse_lazy
-from .models import PostText, PostFile, Attachment
+from .models import PostText, PostFile, Attachment,share
 from .forms import PostFileForm,PostFileShareForm
 from django.contrib.auth.models import User
+from django.forms import modelformset_factory, inlineformset_factory
+
 
 # Create your views here.
 def home(request):
@@ -153,21 +156,59 @@ class PostFileDeleteView(LoginRequiredMixin,UserPassesTestMixin ,DeleteView):
 
 
 
+# def PostFileShare(request, id=None):
+#     instance = get_object_or_404(PostFile, id = id)
+#     if request.method == 'POST':
+#         form = PostFileShareForm(request.POST)
+#         if(form.is_valid()):
+#             u_name = form.instance.viewer_username
+#             try:
+#                 user = User.objects.get(username=u_name)
+#             except User.DoesNotExist:
+#                 user = None
+#             print(user)
+#     else:
+#         form = PostFileShareForm()
+#     return render(request, "blog/PostFile_Share.html",{'form':form})
+
+
 def PostFileShare(request, id=None):
-    instance = get_object_or_404(PostFile, id = id)
+    postfile = get_object_or_404(PostFile, id = id)
+    ShareFormset = inlineformset_factory(PostFile,share, form = PostFileShareForm, extra = 1) #parent model , child model
+
     if request.method == 'POST':
-        form = PostFileShareForm(request.POST)
-        if(form.is_valid()):
-            u_name = form.instance.viewer_username
-            try:
-                user = User.objects.get(username=u_name)
-            except User.DoesNotExist:
-                user = None
-            print(user)
-    else:
-        form = PostFileShareForm()
-    return render(request, "blog/PostFile_Share.html",{'form':form})
-        
+        formset = ShareFormset(request.POST,instance = postfile) #parent
+        if formset.is_valid():
+            instances = formset.save(commit = False)
+            for instance in instances :
+                u_name = instance.viewer_username
+                try:
+                    user = User.objects.get(username=u_name)
+                except User.DoesNotExist:
+                    user = None
+                if user == None:
+                    pass
+                else :
+                    message1 = ('Shared with %(user_name)s successfully') % {'user_name': u_name}
+                    messages.success(request, message1)
+                    instance.viewer = user;
+                    instance.save()
+            for obj in formset.deleted_objects:
+                u_name = obj.viewer_username
+                message2 = ('Removed user %(user_name)s successfully') % {'user_name': u_name}
+                messages.warning(request, message2)
+                obj.delete()
+            return redirect('post-share', id)
+        else: 
+            messages.warning(request, f'Please enter a correct username.')
+            
+
+            return redirect('post-share', id)
+    formset = ShareFormset(instance = postfile)
+
+    return render(request, 'blog/PostFile_Share.html', {'formset' : formset})
+
+
 
 #done
 class MyPostListView(ListView):
