@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import PostFile,share
+from .models import PostFile,Share
 from django.contrib.auth.models import User
 
 class PostFileForm(forms.ModelForm):
@@ -19,7 +19,7 @@ class PostFileForm(forms.ModelForm):
 
 class PostFileShareForm(forms.ModelForm):
     class Meta:
-        model = share
+        model = Share
         fields = ['viewer_username']
         
     def clean(self):

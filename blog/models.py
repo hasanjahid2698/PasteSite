@@ -73,7 +73,7 @@ class Attachment(models.Model):
         super().delete(*args, **kwargs)
 
 
-class share(models.Model):
+class Share(models.Model):
     post = models.ForeignKey(PostFile, on_delete = models.CASCADE)
     viewer = models.ForeignKey(User, on_delete=models.CASCADE)
     viewer_username = models.CharField('',max_length=100)

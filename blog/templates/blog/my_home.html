@@ -3,7 +3,6 @@
 {% block content %}
 
     {% for post in posts%}
-        {% if post.author == user %}
             <article class="media content-section">
                 <div class="media-body">
                     <div class="article-metadata">
@@ -24,7 +23,7 @@
                         </div>
                     </div>
                     <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-                    <p class="article-content">{{ post.content }}</p>
+                    <p class="article-content">{{ post.content | urlize }}</p>
                 </div>
             </article>
         {% endif %}

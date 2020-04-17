@@ -11,7 +11,7 @@ from django.views.generic import (
     DeleteView
 )
 from django.urls import reverse_lazy
-from .models import PostText, PostFile, Attachment,share
+from .models import PostText, PostFile, Attachment,Share
 from .forms import PostFileForm,PostFileShareForm
 from django.contrib.auth.models import User
 from django.forms import modelformset_factory, inlineformset_factory
@@ -66,8 +66,11 @@ class PostFileListView(ListView):
     model = PostFile
     template_name = 'blog/filehome.html'    #<app>/<model>_<viewtype>.html
     context_object_name = 'posts'
-    queryset = PostFile.objects.all()
     ordering = ['-date_posted']
+
+    def get_queryset(self):
+        current_user = self.request.user
+        return PostFile.objects.all().filter(author = current_user)
 
 class PostFileDetailView(DetailView):
     model = PostFile
@@ -79,10 +82,16 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
 
-   # def get_context_data( self, **kwargs):
-    #     context = super(PostFileListView, self).get_context_data(**kwargs)
-    #     context['files'] = Attachment.objects.all()
-    #     return context
+class PostFileSharedWithMeListView(ListView):
+    model = Share
+    template_name = 'blog/fileSharedWithMe.html'    #<app>/<model>_<viewtype>.html
+    context_object_name = 'shares'
+    ordering = ['-date_posted']
+    
+    def get_queryset(self):
+        current_user = self.request.user
+        return Share.objects.all().filter(viewer = current_user)
+
 
 class PostFileUpdateView(LoginRequiredMixin,UserPassesTestMixin ,UpdateView):
     model = PostFile
@@ -174,7 +183,7 @@ class PostFileDeleteView(LoginRequiredMixin,UserPassesTestMixin ,DeleteView):
 
 def PostFileShare(request, id=None):
     postfile = get_object_or_404(PostFile, id = id)
-    ShareFormset = inlineformset_factory(PostFile,share, form = PostFileShareForm, extra = 1) #parent model , child model
+    ShareFormset = inlineformset_factory(PostFile,Share, form = PostFileShareForm, extra = 1) #parent model , child model
 
     if request.method == 'POST':
         formset = ShareFormset(request.POST,instance = postfile) #parent

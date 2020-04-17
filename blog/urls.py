@@ -13,6 +13,7 @@ from .views import (
     PostFileDeleteView,
     PostFileUpdate,
     PostFileShare,
+    PostFileSharedWithMeListView,
 )
 from . import views
 
@@ -20,7 +21,9 @@ urlpatterns = [
     # path('', PostListView.as_view(), name='blog-Home'),
     path('', PostFileListView.as_view(), name='blog-Home'),
 
-    path('/mypaste/', MyPostListView.as_view(), name='blog-myHome'),
+    path('mypaste/', MyPostListView.as_view(), name='blog-myhome'),
+
+    path('ShareWithMe/post', PostFileSharedWithMeListView.as_view(), name='blog-sharewithme'),
 
     # path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/<int:pk>/', PostFileDetailView.as_view(), name='postfile-detail'),

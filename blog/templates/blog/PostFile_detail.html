@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <h2 class="article-title">{{ object.title }}</h2>
-                <p class="article-content">{{ object.content }}</p>
+                <p class="article-content">{{ object.content | urlize }}</p>
 
                 {% if  object.attachment_set.all%}
                     <div class="list-group">

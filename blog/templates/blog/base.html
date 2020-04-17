@@ -29,7 +29,7 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="{% url 'blog-Home'%}">Home</a>
-                <a class="nav-item nav-link" href="/about">About</a>
+                <a class="nav-item nav-link" href="#">About</a>
               </div>
               <!-- Navbar Right Side -->
               <div class="navbar-nav">
@@ -53,8 +53,8 @@
             {% if user.is_authenticated %}
               <div class="list-group ">
                 <a class="btn btn-info list-group-item list-group-item-light" href="{% url 'postfile-create' %}" >Paste Post</a>
-                <a class="btn btn-info list-group-item list-group-item-light" href="{% url 'blog-myHome' %}">My Pastes</a>
-                <a class="btn btn-info list-group-item list-group-item-light" href="#">My Friends</a>
+                <a class="btn btn-info list-group-item list-group-item-light" href="{% url 'blog-Home' %}">My Pastes</a>
+                <a class="btn btn-info list-group-item list-group-item-light" href="{% url 'blog-sharewithme' %}">Shared with Me</a>
               </div>
             {% endif%}
           </div>
