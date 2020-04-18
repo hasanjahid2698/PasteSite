@@ -70,7 +70,7 @@ class PostFileListView(ListView):
 
     def get_queryset(self):
         current_user = self.request.user
-        return PostFile.objects.all().filter(author = current_user)
+        return PostFile.objects.all().filter(author = current_user).order_by('-date_posted')
 
 class PostFileDetailView(DetailView):
     model = PostFile
@@ -90,7 +90,7 @@ class PostFileSharedWithMeListView(ListView):
     
     def get_queryset(self):
         current_user = self.request.user
-        return Share.objects.all().filter(viewer = current_user)
+        return Share.objects.all().filter(viewer = current_user).order_by('-post')
 
 
 class PostFileUpdateView(LoginRequiredMixin,UserPassesTestMixin ,UpdateView):
