@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.views.generic import (
     ListView,
@@ -62,7 +63,7 @@ class PostFileCreateView(LoginRequiredMixin,CreateView):
         else:
             return self.form_invalid(form)
 
-class PostFileListView(ListView):
+class PostFileListView(LoginRequiredMixin,ListView):
     model = PostFile
     template_name = 'blog/filehome.html'    #<app>/<model>_<viewtype>.html
     context_object_name = 'posts'
@@ -72,7 +73,7 @@ class PostFileListView(ListView):
         current_user = self.request.user
         return PostFile.objects.all().filter(author = current_user).order_by('-date_posted')
 
-class PostFileDetailView(DetailView):
+class PostFileDetailView(LoginRequiredMixin,DetailView):
     model = PostFile
 
 
@@ -82,7 +83,7 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
 
-class PostFileSharedWithMeListView(ListView):
+class PostFileSharedWithMeListView(LoginRequiredMixin,ListView):
     model = Share
     template_name = 'blog/fileSharedWithMe.html'    #<app>/<model>_<viewtype>.html
     context_object_name = 'shares'
@@ -125,6 +126,7 @@ class PostFileUpdateView(LoginRequiredMixin,UserPassesTestMixin ,UpdateView):
         else:
             return self.form_invalid(form)
 
+@login_required
 def PostFileUpdate(request, id=None):
     instance = get_object_or_404(PostFile, id = id)
     form =  PostFileForm(request.POST or None, instance =instance)
@@ -180,7 +182,7 @@ class PostFileDeleteView(LoginRequiredMixin,UserPassesTestMixin ,DeleteView):
 #         form = PostFileShareForm()
 #     return render(request, "blog/PostFile_Share.html",{'form':form})
 
-
+@login_required
 def PostFileShare(request, id=None):
     postfile = get_object_or_404(PostFile, id = id)
     ShareFormset = inlineformset_factory(PostFile,Share, form = PostFileShareForm, extra = 1) #parent model , child model
@@ -197,19 +199,25 @@ def PostFileShare(request, id=None):
                     user = None
                 if user == None:
                     pass
+                elif user == request.user:
+                    message0 = ('Post is not sharable with Owner !! ')
+                    messages.warning(request, message0)
+                elif Share.objects.filter(post = postfile , viewer = user):
+                    message01 = ('Already shared with %(user_name)s !!') % {'user_name': u_name}
+                    messages.warning(request, message01)
                 else :
-                    message1 = ('Shared with %(user_name)s successfully') % {'user_name': u_name}
+                    message1 = ('Shared with %(user_name)s successfully !!') % {'user_name': u_name}
                     messages.success(request, message1)
                     instance.viewer = user;
                     instance.save()
             for obj in formset.deleted_objects:
                 u_name = obj.viewer_username
-                message2 = ('Removed user %(user_name)s successfully') % {'user_name': u_name}
+                message2 = ('Removed user %(user_name)s successfully !!') % {'user_name': u_name}
                 messages.warning(request, message2)
                 obj.delete()
             return redirect('post-share', id)
         else: 
-            messages.warning(request, f'Please enter a correct username.')
+            messages.warning(request, f'Please enter a correct username !!')
             
 
             return redirect('post-share', id)
