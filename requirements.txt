@@ -46,7 +46,7 @@ pickleshare==0.7.5
 Pillow==7.0.0
 prometheus-client==0.7.1
 prompt-toolkit==3.0.3
-Pygments==2.5.2
+Pygments==2.7.4
 pylint==2.4.4
 pylint-django==2.0.13
 pylint-plugin-utils==0.6
