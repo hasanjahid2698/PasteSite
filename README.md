@@ -1,4 +1,4 @@
-# 📄 Django Pastebin Project
+# 📄 PasteSite : Django Pastebin Project
 
 This repository contains the source code for a **Django-based Pastebin** application. The project allows users to create accounts and securely share files. It's designed for efficient file sharing with user authentication and account management.
 
